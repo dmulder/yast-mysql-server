@@ -10,17 +10,14 @@
 #
 
 
-import gettext
-from gettext import textdomain
-
+from yast import textdomain, _
 textdomain('mysql')
 
-import ycp
-ycp.import_module('UI')
-from ycp import *
-ycp.widget_names()
+import yast
+yast.import_module('UI')
+from yast import *
 import Wizard
-ycp.import_module('Label')
+yast.import_module('Label')
 
 
 import Mysql
@@ -32,7 +29,7 @@ from defaults import CharacterSetSettings
 from defaults import ServerFeaturesSettings
 from defaults import SecuritySettings
 
-caption = gettext.gettext('MySQL Server Configuration')
+caption = _('MySQL Server Configuration')
 
 selected_items={}
 # ShowSequenceDialog
@@ -92,8 +89,8 @@ def ShowSequenceDialog(contents, values, help, back,  wanted):
 
 def ServerTypeDialog():
 	# specify how the dialog should look like
-        from ycp import *
-        ycp.widget_names()
+        from yast import *
+        yast.widget_names()
 
     	contents = VBox(
 	     Left(Term('Label','MySQL Server Type')),
@@ -124,8 +121,8 @@ def ServerTypeDialog():
 	return ret
 	
 def DatabaseUsageDialog(): 
-        from ycp import *
-        ycp.widget_names()
+        from yast import *
+        yast.widget_names()
 
     	contents = VBox(
 	     Left(Term('Label','Database Usage')),
@@ -157,8 +154,8 @@ def DatabaseUsageDialog():
 
 
 def ServerConnectionsDialog(): 
-        from ycp import *
-        ycp.widget_names()
+        from yast import *
+        yast.widget_names()
 
     	contents = VBox(
 	     Left(Term('Label','Concurrent connections to the Server')),
@@ -193,8 +190,8 @@ def ServerConnectionsDialog():
 	return ret
 
 def ServerNetworkingDialog():
-    from ycp import *
-    ycp.widget_names()
+    from yast import *
+    yast.widget_names()
 
     contents = VBox(
 	     Left(Term('Label','Networking Options')),
@@ -220,8 +217,8 @@ def ServerNetworkingDialog():
     return ret
 
 def CharacterSetDialog(): 
-    from ycp import *
-    ycp.widget_names()
+    from yast import *
+    yast.widget_names()
 
     contents = VBox(
 	     Left(Term('Label','Character Set')),
@@ -254,8 +251,8 @@ def CharacterSetDialog():
     return ret
 
 def SecurityConfigurationDialog(): 
-    from ycp import *
-    ycp.widget_names()
+    from yast import *
+    yast.widget_names()
 
     contents = VBox(
 	     Left(Term('Label','Security Options')),

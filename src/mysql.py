@@ -10,9 +10,7 @@
 # $Id: mysql.py 43761 2008-01-21 10:01:31Z ckornacker $
 #
 
-from ycp import *
-import gettext
-from gettext import textdomain
+from yast import *
 textdomain('mysql')
 init_ui('qt')
 
@@ -24,7 +22,7 @@ import_module('Path')
 import  wizards
 import  Mysql
 
-from ycp import *
+from yast import *
 
 
 

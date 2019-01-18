@@ -10,9 +10,7 @@
 # $Id: wizards.py 43761 2008-01-21 10:01:31Z ckornacker $
 #
 
-from ycp import *
-import gettext
-from gettext import textdomain
+from yast import *
 textdomain('mysql')
 
 
@@ -21,7 +19,7 @@ import_module('Wizard')
 import_module('UI')
 
 
-from ycp import *
+from yast import *
 import dialogs
 import Mysql
 

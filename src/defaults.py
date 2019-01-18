@@ -9,8 +9,9 @@
 # $Id: defaults.py 43761 2008-01-21 10:01:31Z ckornacker $
 #
 
-from ycp import *
+from yast import *
 import_module('UI')
+from yast import UI
 
 # the settings dict consists of a list of values for the several my.cnf sections.
 # the sections are: 	[0] => client

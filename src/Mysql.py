@@ -10,9 +10,7 @@
 # $Id: Mysql.py 43761 2008-01-21 10:01:31Z ckornacker $
 #
 
-from ycp import *
-import gettext
-from gettext import textdomain
+from yast import *
 textdomain('mysql')
 
 import_module('Progress')
@@ -22,7 +20,7 @@ import_module('Wizard')
 
 
 import time
-from ycp import *
+from yast import *
 
 # This values are going to be read
 client_vars	=  ('port', '')
