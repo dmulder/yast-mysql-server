@@ -10,9 +10,11 @@
 # $Id: mysql.py 43761 2008-01-21 10:01:31Z ckornacker $
 #
 
+import sys
+sys.path.append('@INCLUDEDIR@')
+
 from yast import *
 textdomain('mysql')
-init_ui('qt')
 
 import_module('Progress')
 import_module('Report')
@@ -67,11 +69,5 @@ cmdline_description = {
 #/* main ui function */
 
 if __name__ == "__main__":
-	
-
-	ret = None
-	ret = CommandLine.Run(cmdline_description);
-
-	print ret
-
+    print(CommandLine.Run(cmdline_description))
 
