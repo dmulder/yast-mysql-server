@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
 #
-# File:	mysql-server/dialog.py
-# Package:	Configuration of mysql-server
-# Summary:	dialog
-# Authors:	Christian Kornacker <ckornacker@suse.de>
+# File: mysql-server/dialog.py
+# Package:      Configuration of mysql-server
+# Summary:      dialog
+# Authors:      Christian Kornacker <ckornacker@suse.de>
 #
 # $Id: defaults.py 43761 2008-01-21 10:01:31Z ckornacker $
 #
@@ -33,20 +33,20 @@ caption = _('MySQL Server Configuration')
 
 selected_items={}
 # ShowSequenceDialog
-# 	contents	=
-#	values		= Button/TextBox/... values
-#	help		= the dialog's help text
+#       contents        =
+#       values          = Button/TextBox/... values
+#       help            = the dialog's help text
 # back = enable or disable `Back button
-#	wanted		= items we are insterested about
+#       wanted          = items we are insterested about
 
 def ShowSequenceDialog(contents, values, help, back,  wanted):
-        
+
 #        Wizard.SetContentsButtons(caption, contents, help, Label.BackButton(), Label.NextButton())
     Wizard.SetContentsButtons(caption, contents, help, "back", "next")
-#    	Wizard.SetTitleIcon('yast-mysql')
+#       Wizard.SetTitleIcon('yast-mysql')
 
-	# default values
-	# need to be read from my.cnf
+        # default values
+        # need to be read from my.cnf
     if selected_items.__contains__(wanted[0]):
         values={}
         for item in wanted:
@@ -64,149 +64,137 @@ def ShowSequenceDialog(contents, values, help, back,  wanted):
 
     if not back:
         Wizard.DisableBackButton()
-		
+
     ret = None;
     while True :
-            ret = UI.UserInput()
+        ret = UI.UserInput()
 
-            #back
-            if ret.value == 'back':
-                for item in wanted:
-                    if selected_items.__contains__(item):
-                        selected_items.__delitem__(item)
-                break
-            #next
-            elif ret.value == 'next':
-                for item in wanted:
-                    selected_items[item]=UI.QueryWidget(Term('id', item), Symbol('Value'))
-                break
-            #abort    
-            elif ret.value=="abort":
-                break
+        #back
+        if ret.value == 'back':
+            for item in wanted:
+                if selected_items.__contains__(item):
+                    selected_items.__delitem__(item)
+            break
+        #next
+        elif ret.value == 'next':
+            for item in wanted:
+                selected_items[item]=UI.QueryWidget(Term('id', item), Symbol('Value'))
+            break
+        #abort
+        elif ret.value=="abort":
+            break
 
     return ret;
 
 
 def ServerTypeDialog():
-	# specify how the dialog should look like
-        from yast import *
-        yast.widget_names()
+        # specify how the dialog should look like
+    contents = VBox(
+         Left(Term('Label','MySQL Server Type')),
+         VBox(
+            VSpacing(1),
+            Frame(
+                'Server Type',
+                RadioButtonGroup(Term('id','ServerType' ),
+                        VBox(
+            Left( RadioButton(Term('id', 'Developer Machine'),  '&Developer Machine')),
+                            Left( RadioButton(Term('id', 'Server'),  '&Server Machine')),
+                            Left( RadioButton(Term('id', 'Dedicated'),  'D&edicated Machine')),
+                            Left( RadioButton(Term('id', 'Custom'),  '&Custom'))
+                        )
+                    )
+            ),
+            VStretch()
+         )
+)
 
-    	contents = VBox(
-	     Left(Term('Label','MySQL Server Type')),
-	     VBox(
-		VSpacing(1),
-		Frame(
-		    'Server Type',
-		    RadioButtonGroup(Term('id','ServerType' ),
-			    VBox(
-                Left( RadioButton(Term('id', 'Developer Machine'),  '&Developer Machine')),
-				Left( RadioButton(Term('id', 'Server'),  '&Server Machine')),
-				Left( RadioButton(Term('id', 'Dedicated'),  'D&edicated Machine')),
-				Left( RadioButton(Term('id', 'Custom'),  '&Custom'))
-			    )
-			)
-		),
-		VStretch()
-	     )
+    # help text for this dialog
+    help = 'Server Configuration...'
+    defaults={'Server':True}
+    wanted=['ServerType']
+    # bring it to the screen...
+    ret = ShowSequenceDialog(contents, defaults, help, False, wanted);
+
+    return ret
+
+def DatabaseUsageDialog():
+    contents = VBox(
+         Left(Term('Label','Database Usage')),
+         VBox(
+            VSpacing(1),
+            Frame(
+                'Server Features',
+                RadioButtonGroup( Term('id', 'DatabaseUsage' ),
+                        VBox(
+                            Left( RadioButton(Term('id', 'Multifunctional'), 'Multifunctional Database')),
+                            Left( RadioButton(Term('id',  'Transactional'), 'Transactional Database Only')),
+                            Left( RadioButton( Term('id',  'Non-Transactional'), 'Non-Transactional Database Only'))
+                        )
+                    )
+            ),
+            VStretch()
+         )
     )
 
-        # help text for this dialog
-        help = 'Server Configuration...'
-        defaults={'Server':True}
-        wanted=['ServerType']
-        # bring it to the screen...
-        ret = ShowSequenceDialog(contents, defaults, help, False, wanted);
 
-	return ret
-	
-def DatabaseUsageDialog(): 
-        from yast import *
-        yast.widget_names()
+    help = 'Server Configuration...'
+    defaults = {'Transactional':True}
+    wanted=['DatabaseUsage']
+    ret = ShowSequenceDialog(contents, defaults, help, True,  wanted);
 
-    	contents = VBox(
-	     Left(Term('Label','Database Usage')),
-	     VBox(
-		VSpacing(1),
-		Frame(
-		    'Server Features',
-		    RadioButtonGroup( Term('id', 'DatabaseUsage' ),
-			    VBox(
-				Left( RadioButton(Term('id', 'Multifunctional'), 'Multifunctional Database')),
-				Left( RadioButton(Term('id',  'Transactional'), 'Transactional Database Only')),
-				Left( RadioButton( Term('id',  'Non-Transactional'), 'Non-Transactional Database Only'))
-			    )
-			)
-		),
-		VStretch()
-	     )
-	)
+#       selected_items['DatabaseUsage']=UI.QueryWidget(Term('id', 'DatabaseUsage'), Symbol('CurrentButton'))
 
-    
-        help = 'Server Configuration...'
-        defaults = {'Transactional':True}
-        wanted=['DatabaseUsage']
-    	ret = ShowSequenceDialog(contents, defaults, help, True,  wanted);
-
-#	selected_items['DatabaseUsage']=UI.QueryWidget(Term('id', 'DatabaseUsage'), Symbol('CurrentButton'))
-
-	return ret
+    return ret
 
 
-def ServerConnectionsDialog(): 
-        from yast import *
-        yast.widget_names()
+def ServerConnectionsDialog():
+    contents = VBox(
+         Left(Term('Label','Concurrent connections to the Server')),
+         VBox(
+            VSpacing(1),
+            Frame(
+                'Server Features',
+                RadioButtonGroup(Term('id',  'ServerConnections' ),
+                        VBox(
+                            Left( RadioButton(Term('id',  'Decision'), '&Decision Support (DSS)/OLAP')),
+                            Left( RadioButton(Term('id',  'Online'), '&Online Transaction Processing (OLTP)')),
+                            Left( RadioButton(Term('id',  'Manual'), '&Manual Setting')),
+                            VBox(
+                                    Right( TextEntry(Term('id',  'Connections'), '&Concurrent connections:')))
+                        )
+                    )
+            ),
+            VStretch()
+         )
+    )
 
-    	contents = VBox(
-	     Left(Term('Label','Concurrent connections to the Server')),
-	     VBox(
-		VSpacing(1),
-		Frame(
-		    'Server Features',
-		    RadioButtonGroup(Term('id',  'ServerConnections' ),
-			    VBox(
-				Left( RadioButton(Term('id',  'Decision'), '&Decision Support (DSS)/OLAP')),
-				Left( RadioButton(Term('id',  'Online'), '&Online Transaction Processing (OLTP)')),
-				Left( RadioButton(Term('id',  'Manual'), '&Manual Setting')),
-				VBox(
-					Right( TextEntry(Term('id',  'Connections'), '&Concurrent connections:')))
-			    )
-			)
-		),
-		VStretch()
-	     )
-	)
-    
-	
-        help = 'Server Configuration...'
-        defaults = {'Decision':True}
-        wanted=['ServerConnections',   'Connections']
 
-    	ret = ShowSequenceDialog(contents, defaults, help, True,  wanted);
+    help = 'Server Configuration...'
+    defaults = {'Decision':True}
+    wanted=['ServerConnections',   'Connections']
 
-#	selected_items['ServerConnections']=UI.QueryWidget(Term('id',  'ServerConnections'), Symbol('CurrentButton'))
+    ret = ShowSequenceDialog(contents, defaults, help, True,  wanted);
+
+#       selected_items['ServerConnections']=UI.QueryWidget(Term('id',  'ServerConnections'), Symbol('CurrentButton'))
 #        selected_items['Connections']=UI.QueryWidget(Term('id',  'Connections'), Symbol('Value'))
 
-	return ret
+    return ret
 
 def ServerNetworkingDialog():
-    from yast import *
-    yast.widget_names()
-
     contents = VBox(
-	     Left(Term('Label','Networking Options')),
-	     VBox(
-		VSpacing(1),
-		Frame(
-		    'Server Features',
-		    VBox(
-			Left( CheckBox(Term('id',   'TCPIP'), 'Enable &TCP/IP Networking')),
-			Left( CheckBox(Term('id',  'Strict'), 'Enable &Strict Mode'))
-		    )
-		),
-		VStretch()
-	     )
-	)
+             Left(Term('Label','Networking Options')),
+             VBox(
+                VSpacing(1),
+                Frame(
+                    'Server Features',
+                    VBox(
+                        Left( CheckBox(Term('id',   'TCPIP'), 'Enable &TCP/IP Networking')),
+                        Left( CheckBox(Term('id',  'Strict'), 'Enable &Strict Mode'))
+                    )
+                ),
+                VStretch()
+             )
+        )
 
     help = 'Server Configuration...'
     defaults = {'TCPIP':True, 'Strict':True}
@@ -216,32 +204,29 @@ def ServerNetworkingDialog():
 
     return ret
 
-def CharacterSetDialog(): 
-    from yast import *
-    yast.widget_names()
-
+def CharacterSetDialog():
     contents = VBox(
-	     Left(Term('Label','Character Set')),
-	     VBox(
-		VSpacing(1),
-		Frame(
-		    'Server Features',
-		    RadioButtonGroup(Term('id',  'CharacterSet' ),
-			    VBox(
-				Left( RadioButton(Term('id',  'Standard'), '&Standard Character Set')),
-				Left( RadioButton(Term('id',  'Multilingual'), '&Best for Multilingual Support')),
-				Left( RadioButton( Term('id',  'Manual'), '&Manually Selected Default Character Set')),
-				VBox(
-					Right( SelectionBox(Term('id',  'charset'), 'Character Set:', [ 'latin1', 'utf8' ]))
-				)
-			    )
-			)
-		),
-		VStretch()
-	     )
-	)
+             Left(Term('Label','Character Set')),
+             VBox(
+                VSpacing(1),
+                Frame(
+                    'Server Features',
+                    RadioButtonGroup(Term('id',  'CharacterSet' ),
+                            VBox(
+                                Left( RadioButton(Term('id',  'Standard'), '&Standard Character Set')),
+                                Left( RadioButton(Term('id',  'Multilingual'), '&Best for Multilingual Support')),
+                                Left( RadioButton( Term('id',  'Manual'), '&Manually Selected Default Character Set')),
+                                VBox(
+                                        Right( SelectionBox(Term('id',  'charset'), 'Character Set:', [ 'latin1', 'utf8' ]))
+                                )
+                            )
+                        )
+                ),
+                VStretch()
+             )
+        )
 
- 
+
     help = 'Server Configuration...'
     defaults = {'Standard':True}
     wanted=['CharacterSet',  'charset']
@@ -250,34 +235,30 @@ def CharacterSetDialog():
 
     return ret
 
-def SecurityConfigurationDialog(): 
-    from yast import *
-    yast.widget_names()
-
+def SecurityConfigurationDialog():
     contents = VBox(
-	     Left(Term('Label','Security Options')),
-	     VBox(
-		VSpacing(1),
-		Frame(
-		    'Server Features',
-		    VBox(
-			Left( CheckBox(Term('id',  'Modify'), '&Modify MySQL Security Settings')),
-			VBox(
-				Right( Password(Term('id',  'OldPassword'), 'Current root Password:')),
-				Right( Password(Term('id', 'NewPassword'), 'New root Passsword:')),
-				Right( Password(Term('id', 'Confirm'), 'Confirm new Password:'))
-			),
-			Left( CheckBox(Term('id',  'AnonymousAccount'), '&Create Anonymous Account')),
-		    )
-		),
-		VStretch()
-	     )
-	)
-    
+             Left(Term('Label','Security Options')),
+             VBox(
+                VSpacing(1),
+                Frame(
+                    'Server Features',
+                    VBox(
+                        Left( CheckBox(Term('id',  'Modify'), '&Modify MySQL Security Settings')),
+                        VBox(
+                                Right( Password(Term('id',  'OldPassword'), 'Current root Password:')),
+                                Right( Password(Term('id', 'NewPassword'), 'New root Passsword:')),
+                                Right( Password(Term('id', 'Confirm'), 'Confirm new Password:'))
+                        ),
+                        Left( CheckBox(Term('id',  'AnonymousAccount'), '&Create Anonymous Account')),
+                    )
+                ),
+                VStretch()
+             )
+        )
+
     help = 'Server Configuration...'
     defaults = {'AnonymousAccount':True}
     wanted=['Modify',  'AnonymousAccount',  'OldPassword',  'NewPassword',  'Confirm']
     ret = ShowSequenceDialog(contents, defaults, help, True,  wanted);
 
     return ret
-
