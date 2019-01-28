@@ -15,9 +15,9 @@ textdomain('mysql')
 
 import yast
 yast.import_module('UI')
-from yast import *
-import Wizard
+yast.import_module('Wizard')
 yast.import_module('Label')
+from yast import *
 
 
 import Mysql
